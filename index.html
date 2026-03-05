@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملخص أنظمة التشغيل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1923;
+    --paper: #f5f0e8;
+    --blue-dark: #1a3a5c;
+    --blue-mid: #2563a8;
+    --blue-light: #dbeafe;
+    --blue-pale: #eff6ff;
+    --red: #b91c1c;
+    --red-pale: #fef2f2;
+    --green: #166534;
+    --green-pale: #f0fdf4;
+    --gold: #b45309;
+    --gold-pale: #fffbeb;
+    --border: #c8d8e8;
+    --shadow: rgba(26,58,92,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--blue-dark);
+    padding: 48px 40px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 20px,
+      rgba(255,255,255,.03) 20px, rgba(255,255,255,.03) 40px
+    );
+  }
+  .site-header h1 {
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    position: relative;
+  }
+  .site-header h1 span {
+    color: #7eb8f7;
+    font-weight: 300;
+    font-size: 1.3rem;
+    display: block;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+  .chips {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .chip {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    color: #e0edff;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── NAV ── */
+  .nav-bar {
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px var(--shadow);
+    overflow-x: auto;
+  }
+  .nav-bar a {
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+  }
+  .nav-bar a:hover { color: var(--blue-mid); border-bottom-color: var(--blue-mid); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── CHAPTER TITLE ── */
+  .chapter-title {
+    background: var(--blue-dark);
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 40px 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+  .chapter-title .icon { font-size: 1.5rem; }
+  .chapter-title .fr { color: #93c5fd; font-weight: 400; font-size: .95rem; }
+
+  /* ── SECTION ── */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--blue-mid);
+    border-right: 4px solid var(--blue-mid);
+    padding: 8px 16px 8px 0;
+    margin: 28px 0 14px;
+    background: var(--blue-pale);
+    border-radius: 0 6px 6px 0;
+  }
+  .section-title .fr { color: #64a0d4; font-weight: 400; font-size: .9rem; }
+
+  .subsection-title {
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin: 18px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subsection-title::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--blue-mid);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── BOXES ── */
+  .box {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    border-right: 4px solid;
+  }
+  .box-blue  { background: var(--blue-pale); border-color: var(--blue-mid); }
+  .box-red   { background: var(--red-pale);  border-color: var(--red); }
+  .box-green { background: var(--green-pale); border-color: var(--green); }
+  .box-gold  { background: var(--gold-pale); border-color: var(--gold); }
+
+  .box-title {
+    font-weight: 700;
+    font-size: .9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .box-blue  .box-title { color: var(--blue-dark); }
+  .box-red   .box-title { color: var(--red); }
+  .box-green .box-title { color: var(--green); }
+  .box-gold  .box-title { color: var(--gold); }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    background: var(--blue-dark);
+    color: #fff;
+    padding: 11px 14px;
+    text-align: right;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--blue-pale); }
+  tr:hover td { background: #dbeafe88; }
+  .fr { color: var(--blue-mid); font-weight: 600; font-family: 'Fira Code', monospace; font-size: .88em; }
+  .kw { color: var(--red); font-weight: 700; }
+  .star { color: #f59e0b; }
+
+  /* ── LISTS ── */
+  ul.styled { list-style: none; padding: 0; margin: 8px 0; }
+  ul.styled li {
+    padding: 6px 0 6px 0;
+    border-bottom: 1px dashed #d0dde8;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before {
+    content: '▸';
+    color: var(--blue-mid);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── EQUATIONS ── */
+  .eq-box {
+    background: #fff;
+    border: 2px solid var(--red);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 14px 0;
+  }
+  .eq-box .eq-title {
+    font-weight: 700;
+    color: var(--red);
+    font-size: .9rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eq-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+    align-items: center;
+    margin: 6px 0;
+  }
+  .eq-label {
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    color: var(--blue-dark);
+    font-size: 14px;
+    white-space: nowrap;
+    direction: ltr;
+    text-align: left;
+  }
+  .eq-def { color: var(--ink); font-size: 14px; }
+
+  /* ── ALGO CARDS ── */
+  .algo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  @media(max-width:600px){ .algo-grid { grid-template-columns: 1fr; } }
+  .algo-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .algo-card:hover { box-shadow: 0 6px 20px var(--shadow); transform: translateY(-2px); }
+  .algo-card.preemptif { border-top: 4px solid var(--green); }
+  .algo-card.nonpreemptif { border-top: 4px solid var(--blue-mid); }
+  .algo-card h4 {
+    font-family: 'Fira Code', monospace;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+    direction: ltr;
+    text-align: left;
+  }
+  .algo-card .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+  }
+  .badge-green { background: #dcfce7; color: var(--green); }
+  .badge-blue  { background: #dbeafe; color: var(--blue-mid); }
+  .algo-card p { font-size: 13.5px; color: #333; }
+  .algo-card .danger { color: var(--red); font-size: 13px; margin-top: 6px; font-weight: 600; }
+
+  /* ── DIAGRAM ── */
+  .diagram {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    direction: ltr;
+  }
+  .state-node {
+    width: 90px; height: 55px;
+    border-radius: 50px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    border: 2px solid;
+    position: relative;
+  }
+  .state-elu   { background: #1d4ed8; color: #fff; border-color: #1e3a8a; }
+  .state-pret  { background: #bfdbfe; color: #1e3a8a; border-color: #93c5fd; }
+  .state-bloc  { background: #fca5a5; color: #7f1d1d; border-color: #f87171; }
+  .arrow-wrap  { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px; }
+  .arrow-label { font-size: 10px; color: #666; font-family: 'Fira Code', monospace; }
+  .arrow       { font-size: 18px; color: #555; }
+
+  /* ── COMPARISON TABLE ── */
+  .cmp-table th:first-child,
+  .cmp-table td:first-child {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    direction: ltr;
+    text-align: left;
+  }
+  .yes { color: #16a34a; font-weight: 700; }
+  .no  { color: var(--red); font-weight: 700; }
+
+  /* ── TIPS ── */
+  .tips-box {
+    background: var(--blue-dark);
+    color: #fff;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 32px 0 0;
+  }
+  .tips-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #93c5fd;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tips-box ul { list-style: none; }
+  .tips-box ul li {
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 14px; color: #dde8f8;
+  }
+  .tips-box ul li:last-child { border-bottom: none; }
+  .tips-box ul li::before { content: '★'; color: #fbbf24; flex-shrink: 0; }
+
+  /* ── DIVIDER ── */
+  hr.chap { border: none; border-top: 2px solid var(--border); margin: 40px 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: #888;
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .nav-bar { display: none; }
+    .algo-card:hover { transform: none; box-shadow: none; }
+    body { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1>
+    أنظمة التشغيل
+    <span>Systèmes d'Exploitation (SE) — ملخص شامل للوحدتين</span>
+  </h1>
+  <div class="chips">
+    <span class="chip">📘 الوحدة 1 : مقدمة لأنظمة التشغيل</span>
+    <span class="chip">📗 الوحدة 2 : إدارة المعالج</span>
+    <span class="chip">⏰ امتحان بعد يومين</span>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <a href="#ch1">📘 الوحدة 1</a>
+  <a href="#def">التعريف</a>
+  <a href="#hist">التاريخ</a>
+  <a href="#classes">التصنيفات</a>
+  <a href="#fonctions">الوظائف</a>
+  <a href="#ch2">📗 الوحدة 2</a>
+  <a href="#concepts">المفاهيم</a>
+  <a href="#etats">الحالات</a>
+  <a href="#relations">العلاقات</a>
+  <a href="#equations">المعادلات</a>
+  <a href="#algos">الخوارزميات</a>
+  <a href="#tips">نصائح</a>
+</nav>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 1 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="ch1" class="chapter-title">
+  <span class="icon">📘</span>
+  <div>
+    الوحدة 1
+    <span class="fr">Introduction aux Systèmes d'Exploitation</span>
+  </div>
+</div>
+
+<!-- 1.1 DÉFINITION -->
+<div id="def">
+  <div class="section-title">
+    1.1 تعريف نظام التشغيل
+    <span class="fr">(Système d'Exploitation / SE)</span>
+  </div>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 التعريف الجوهري</div>
+    نظام التشغيل هو برنامج أساسي يعمل كوسيط بين المستخدم والمعدات المادية.
+    هو أول برنامج يُحمَّل عند تشغيل الجهاز، ويُشبَّه بـ "قائد الأوركسترا"
+    الذي ينسق جميع مكونات النظام المعلوماتي لضمان استخدام سلس وفعّال.
+  </div>
+</div>
+
+<!-- 1.2 HISTORIQUE -->
+<div id="hist">
+  <div class="section-title">
+    1.2 التطور التاريخي
+    <span class="fr">(Évolution Historique)</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>المرحلة</th><th>الحقبة</th><th>المفهوم الرئيسي</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center;font-weight:700">1</td>
+          <td>1940 – 1950</td>
+          <td>أنظمة تسلسلية <span class="fr">(Séquentiels)</span> — مستخدم واحد، لا يوجد SE حقيقي، المعالج خامل معظم الوقت</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:700">2</td>
+          <td>1950 – 1960</td>
+          <td>الأنظمة الدفعية <span class="fr">(Batch Systems)</span> — تجميع الأعمال وتنفيذها تلقائياً بالتسلسل عبر <span class="fr">Moniteur d'enchaînement</span></td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:700">3</td>
+          <td>نهاية 1960</td>
+          <td>تعدد البرامج <span class="fr">(Multiprogrammation)</span> — عدة برامج في الذاكرة، عند انتظار E/S يُحوِّل SE للبرنامج الآخر <span class="fr">(Context Switch)</span></td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:700">4</td>
+          <td>1970 – اليوم</td>
+          <td>المشاركة الزمنية <span class="fr">(Temps Partagé)</span> — المعالج يُقاطَع بعد كل <span class="fr">quantum</span>، نظام تفاعلي، <span class="fr">UNIX</span> النموذج الأساسي</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:700">5</td>
+          <td>1980 – الحاضر</td>
+          <td>الحوسبة الشخصية والأنظمة الموزعة <span class="fr">(Systèmes Répartis)</span> — MS-DOS، Linux 1991</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 1.3 CLASSES -->
+<div id="classes">
+  <div class="section-title">
+    1.3 تصنيفات أنظمة التشغيل
+    <span class="fr">(Classes de SE)</span>
+  </div>
+
+  <div class="subsection-title">أ) حسب المستخدمين <span class="fr" style="margin-right:8px">(par Utilisateurs)</span></div>
+  <ul class="styled">
+    <li><span class="fr">Mono-utilisateur</span> — مستخدم واحد فقط (مثال: MS-DOS)</li>
+    <li><span class="fr">Multi-utilisateur</span> — عدة مستخدمين في آنٍ واحد مع حماية لكل منهم (<span class="fr">Linux, Windows Server</span>)</li>
+  </ul>
+
+  <div class="subsection-title">ب) حسب المهام <span class="fr" style="margin-right:8px">(par Tâches)</span></div>
+  <ul class="styled">
+    <li><span class="fr">Monotâche</span> — مهمة واحدة فقط في كل لحظة</li>
+    <li><span class="fr">Multitâche coopératif</span> — البرامج تتنازل طوعاً عن المعالج (Windows 3.x القديم)</li>
+    <li><span class="kw">Multitâche préemptif ★</span> — SE يسترجع المعالج قسراً بعد كل <span class="fr">quantum</span> — أساس كل الأنظمة الحديثة</li>
+  </ul>
+
+  <div class="subsection-title">ج) حسب المعالجات <span class="fr" style="margin-right:8px">(par Processeurs)</span></div>
+  <ul class="styled">
+    <li><span class="fr">Mono-CPU</span> — معالج وحيد</li>
+    <li><span class="kw">Multi-CPU / SMP (Symétrique)</span> — عدة معالجات تتشارك الذاكرة — الأكثر شيوعاً</li>
+    <li><span class="fr">Asymétrique</span> — كل معالج مخصص لمهمة محددة</li>
+  </ul>
+</div>
+
+<!-- 1.4 FONCTIONS -->
+<div id="fonctions">
+  <div class="section-title">
+    1.4 وظائف نظام التشغيل
+    <span class="fr">(Fonctions du SE)</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>الوظيفة</th><th>الشرح</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="fr">Gestion des Processus</span></td><td>جدولة العمليات وإنشاؤها وإنهاؤها — يُتيح تعدد المهام</td></tr>
+        <tr><td><span class="fr">Gestion de la Mémoire</span></td><td>تخصيص الذاكرة وحمايتها + الذاكرة الافتراضية <span class="fr">(Mémoire Virtuelle)</span></td></tr>
+        <tr><td><span class="fr">Gestion des Fichiers</span></td><td>إنشاء / حذف / قراءة / كتابة + صلاحيات الوصول</td></tr>
+        <tr><td><span class="fr">Gestion des E/S</span></td><td>التحكم في الأجهزة الطرفية عبر <span class="fr">Pilotes (Drivers)</span></td></tr>
+        <tr><td><span class="fr">Interface Utilisateur</span></td><td>CLI (سطر الأوامر) أو GUI (واجهة رسومية)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection-title">أمثلة أنظمة التشغيل — الفئات العشر</div>
+  <ul class="styled">
+    <li><strong>الحاسوب الشخصي:</strong> Windows, macOS, Linux (Ubuntu, Fedora…)</li>
+    <li><strong>الأجهزة المحمولة:</strong> Android, iOS, HarmonyOS</li>
+    <li><strong>الخوادم:</strong> Windows Server, Linux Server, Unix</li>
+    <li><strong>RTOS (الزمن الحقيقي):</strong> FreeRTOS, QNX, VxWorks — للطب والطيران والسيارات</li>
+    <li><strong>Mainframe:</strong> z/OS — معالجة بيانات ضخمة</li>
+    <li><strong>مدمجة:</strong> Embedded Linux, RTEMS</li>
+    <li><strong>الحواسيب الفائقة:</strong> Linux (Cray OS) — حوسبة مكثفة</li>
+    <li><strong>متخصصة:</strong> Tails (أمان), Kali Linux (اختبار اختراق)</li>
+    <li><strong>افتراضية:</strong> VMware ESXi, Hyper-V, XenServer</li>
+    <li><strong>IoT:</strong> Google Fuchsia, Amazon FreeRTOS</li>
+  </ul>
+</div>
+
+<hr class="chap">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 2 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="ch2" class="chapter-title" style="background:linear-gradient(135deg,#14532d,#166534)">
+  <span class="icon">📗</span>
+  <div>
+    الوحدة 2
+    <span class="fr">Gestion du Processeur</span>
+  </div>
+</div>
+
+<!-- 2.1 CONCEPTS -->
+<div id="concepts">
+  <div class="section-title">
+    2.1 المفاهيم الأساسية
+    <span class="fr">(Concepts de Base)</span>
+  </div>
+
+  <div class="box box-blue">
+    <div class="box-title">📄 <span class="fr">Programme</span> — البرنامج</div>
+    سلسلة تعليمات لتنفيذ معالجة ما. طابع <strong>ثابت</strong> <span class="fr">(statique)</span>.
+    يتكون من: كود + بيانات — سلبي لا يتحرك.
+  </div>
+
+  <div class="box box-green">
+    <div class="box-title">⚙️ <span class="fr">Processus</span> — العملية</div>
+    برنامج <strong>قيد التنفيذ</strong> في الذاكرة. طابع <strong>ديناميكي</strong> = برنامج + سياق تنفيذ <span class="fr">(Contexte)</span>.<br>
+    السياق يشمل: سجلات المعالج <span class="fr">(CO, SW…)</span> + قطاعات الذاكرة (كود، بيانات…).
+  </div>
+
+  <div class="box box-gold">
+    <div class="box-title">📋 <span class="fr">PCB — Process Control Block</span></div>
+    يحتفظ به SE لكل عملية ويتضمن:
+    <span class="fr">PID</span>، <span class="fr">PPID</span>، حالة العملية، الأولوية، العداد التسلسلي، مؤشرات الذاكرة والملفات، وقت التنفيذ…
+  </div>
+
+  <div class="subsection-title"><span class="fr">Thread</span> — الخيط</div>
+  <ul class="styled">
+    <li>الخيط = جزء فرعي من العملية. كل الخيوط <strong>تتشارك</strong> نفس الذاكرة والموارد.</li>
+    <li>تنفيذ الخيوط <strong>متزامن</strong> <span class="fr">(concurrent)</span>.</li>
+    <li>يوجد دائماً خيط رئيسي واحد على الأقل، وعمره لا يتجاوز عمر العملية.</li>
+    <li>مثال: Word يحتوي خيطاً للكتابة، آخر للحفظ التلقائي، آخر للتدقيق النحوي.</li>
+  </ul>
+
+  <div class="subsection-title"><span class="fr">Ressource</span> — المورد</div>
+  <ul class="styled">
+    <li>أي عنصر تحتاجه العملية. حالته: حر <span class="fr">(libre)</span> أو مشغول <span class="fr">(occupée)</span>.</li>
+    <li><strong>مورد حرج <span class="fr">(Ressource critique)</span>:</strong> لا يمكن استخدامه إلا من عملية واحدة (المعالج، الطابعة). دورة: تخصيص ← استخدام ← إرجاع.</li>
+  </ul>
+</div>
+
+<!-- 2.2 ÉTATS -->
+<div id="etats">
+  <div class="section-title">
+    2.2 حالات العملية
+    <span class="fr">(États du Processus)</span>
+  </div>
+
+  <div class="diagram">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="font-size:11px;color:#888;font-family:'Fira Code',monospace">Création</div>
+      <div style="font-size:20px;color:#555">↓</div>
+      <div class="state-node state-pret">Prêt</div>
+      <div style="font-size:11px;color:#888;font-family:'Fira Code',monospace;text-align:center">انتظار<br>المعالج</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:110px">
+      <div style="font-size:10px;color:#2563a8;font-family:'Fira Code',monospace">← Élection</div>
+      <div style="font-size:22px">⇄</div>
+      <div style="font-size:10px;color:#666;font-family:'Fira Code',monospace">Préemption →</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="font-size:11px;color:#888;font-family:'Fira Code',monospace">Terminaison ↗</div>
+      <div class="state-node state-elu">Élu</div>
+      <div style="font-size:20px;color:#dc2626">↓</div>
+      <div style="font-size:10px;color:#dc2626;font-family:'Fira Code',monospace">Blocage (E/S)</div>
+      <div style="font-size:20px;color:#dc2626">↓</div>
+      <div class="state-node state-bloc">Bloqué</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:110px;margin-top:80px">
+      <div style="font-size:10px;color:#16a34a;font-family:'Fira Code',monospace">Déblocage ↙</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>الحالة</th><th>الانتقال</th><th>المعنى</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:#1d4ed8">Élu</strong></td>
+          <td>جاهز <span class="fr">→ Élection →</span> مُنتَخَب</td>
+          <td>يمتلك المعالج وينفذ الآن</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#1e3a8a">Prêt</strong></td>
+          <td>محظور <span class="fr">→ Déblocage →</span> جاهز</td>
+          <td>ينتظر الحصول على المعالج</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#b91c1c">Bloqué</strong></td>
+          <td>مُنتَخَب <span class="fr">→ Blocage →</span> محظور</td>
+          <td>ينتظر مورداً آخر (مثل E/S)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 2.3 RELATIONS -->
+<div id="relations">
+  <div class="section-title">2.3 التسلسل الهرمي والعلاقات بين العمليات</div>
+
+  <div class="subsection-title">الهرمية <span class="fr" style="margin-right:8px">(Hiérarchie)</span></div>
+  <ul class="styled">
+    <li>عملية يمكنها إنشاء أخرى ← شجرة هرمية <span class="fr">(groupe de processus)</span>.</li>
+    <li>في Linux: <code style="background:#f1f5f9;padding:1px 6px;border-radius:4px;font-family:'Fira Code',monospace">fork()</code> هو الاستدعاء الوحيد لإنشاء عملية.</li>
+    <li>في MS-DOS: الأب يتوقف حتى ينتهي الابن (عكس UNIX).</li>
+  </ul>
+
+  <div class="subsection-title">العلاقات الثلاث</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>النوع</th><th>التعريف</th><th>مثال</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="fr">Synchronisation</span></td>
+          <td>تنسيق زمني بين العمليات</td>
+          <td>عملية تنتظر إشارة من أخرى</td>
+        </tr>
+        <tr>
+          <td><span class="fr">Compétition</span></td>
+          <td>عدة عمليات على مورد حصري</td>
+          <td>المعالج، الطابعة</td>
+        </tr>
+        <tr>
+          <td><span class="fr">Coopération</span></td>
+          <td>تعاون لإنجاز مهمة مشتركة</td>
+          <td>P1 ينتج ملفاً، P2 يطبعه</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 2.4 ÉQUATIONS -->
+<div id="equations">
+  <div class="section-title">
+    2.4 معادلات الجدولة
+    <span class="fr">(Critères d'Ordonnancement)</span>
+    <span class="kw" style="font-size:.85rem"> ⚠️ مهم جداً</span>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">⚠️ المعادلات الأساسية — احفظها!</div>
+    <div class="eq-row">
+      <div class="eq-label">TA =</div>
+      <div class="eq-def">تاريخ بدء التنفيذ − تاريخ الوصول &nbsp;<span class="fr">(Temps d'attente)</span></div>
+    </div>
+    <div class="eq-row">
+      <div class="eq-label">TR =</div>
+      <div class="eq-def">تاريخ الانتهاء − تاريخ الوصول &nbsp;<span class="fr">(Temps de rotation)</span></div>
+    </div>
+    <div class="eq-row">
+      <div class="eq-label">TR =</div>
+      <div class="eq-def">TA + مدة التنفيذ</div>
+    </div>
+    <hr style="border:none;border-top:1px dashed #d1d5db;margin:10px 0">
+    <div class="eq-row">
+      <div class="eq-label">TAM =</div>
+      <div class="eq-def">Σ TA / عدد العمليات &nbsp;&nbsp;<span class="fr">(Temps d'attente moyen)</span></div>
+    </div>
+    <div class="eq-row">
+      <div class="eq-label">TRM =</div>
+      <div class="eq-def">Σ TR / عدد العمليات &nbsp;&nbsp;<span class="fr">(Temps de rotation moyen)</span></div>
+    </div>
+  </div>
+
+  <div class="box box-blue" style="margin-top:12px">
+    <div class="box-title">📊 المعايير الأخرى</div>
+    استخدام المعالج <span class="fr">(Utilisation CPU)</span> —
+    الإنتاجية <span class="fr">(Débit)</span> —
+    العدالة <span class="fr">(Équité)</span> لتجنب المجاعة <span class="fr">(Famine)</span> —
+    وقت الاستجابة <span class="fr">(Temps de réponse)</span>
+  </div>
+</div>
+
+<!-- 2.5 ALGORITHMES -->
+<div id="algos">
+  <div class="section-title">
+    2.5 خوارزميات الجدولة
+    <span class="fr">(Algorithmes d'Ordonnancement)</span>
+  </div>
+
+  <div class="algo-grid">
+    <!-- FCFS -->
+    <div class="algo-card nonpreemptif">
+      <h4>FCFS — First Come First Served</h4>
+      <span class="badge badge-blue">Non-Préemptif</span>
+      <p>الأول وصولاً الأول خدمةً — هيكل قائمة انتظار <span class="fr">(File)</span>. بسيط لكن وقت الانتظار قد يكون طويلاً جداً.</p>
+      <div class="danger">⚠ وقت انتظار غير مثالي</div>
+    </div>
+
+    <!-- SJF -->
+    <div class="algo-card nonpreemptif">
+      <h4>SJF — Shortest Job First</h4>
+      <span class="badge badge-blue">Non-Préemptif</span>
+      <p>المعالج يُعطى للعملية ذات أقصر وقت تنفيذ متوقع. يُقلل متوسط وقت الانتظار لكن يتطلب معرفة مسبقة.</p>
+      <div class="danger">⚠ Famine للعمليات الطويلة</div>
+    </div>
+
+    <!-- SRTF -->
+    <div class="algo-card preemptif">
+      <h4>SRTF — Shortest Remaining Time First</h4>
+      <span class="badge badge-green">Préemptif</span>
+      <p>إذا وصلت عملية جديدة وقتها أقصر مما تبقى للحالية ← تُستبدل. مكافئ لـ SJF لكن وقائي.</p>
+      <div class="danger">⚠ Famine للعمليات الطويلة</div>
+    </div>
+
+    <!-- ROUND ROBIN -->
+    <div class="algo-card preemptif">
+      <h4>Round Robin (RR / Tourniquet)</h4>
+      <span class="badge badge-green">Préemptif</span>
+      <p>المعالج لكل عملية بدوره لمدة <strong>Quantum Q</strong>. عادل وتفاعلي.</p>
+      <div class="box box-gold" style="margin-top:10px;padding:10px 14px;font-size:13px">
+        Q صغير → كثرة التبديلات → ضياع وقت<br>
+        Q كبير → وقت استجابة طويل
+      </div>
+    </div>
+
+    <!-- PRIORITÉ -->
+    <div class="algo-card" style="border-top:4px solid #7c3aed;grid-column:span 2">
+      <h4>Priorité — الأولوية</h4>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <span class="badge badge-green">Préemptif</span>
+        <span class="badge badge-blue">Non-Préemptif</span>
+      </div>
+      <p>كل عملية تحمل رقم أولوية — المعالج للأعلى أولوية. عند التساوي تُطبَّق FCFS. يمكن تطبيقها بوقائية أو بدونها.</p>
+      <div class="danger">⚠ Famine — الحل: <span class="fr">Vieillissement (Aging)</span> — رفع الأولوية تدريجياً مع مرور الوقت</div>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="subsection-title">مقارنة سريعة</div>
+  <div class="tbl-wrap">
+    <table class="cmp-table">
+      <thead>
+        <tr><th>الخوارزمية</th><th>Préemptif?</th><th>العدالة</th><th>المزايا</th><th>العيوب</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FCFS</td>
+          <td class="no" style="text-align:center">✗</td>
+          <td>متوسطة</td>
+          <td>بسيط التطبيق</td>
+          <td>وقت انتظار غير مثالي</td>
+        </tr>
+        <tr>
+          <td>SJF</td>
+          <td class="no" style="text-align:center">✗</td>
+          <td>ضعيفة</td>
+          <td>أقل متوسط انتظار</td>
+          <td>Famine + يحتاج معرفة المدد</td>
+        </tr>
+        <tr>
+          <td>SRTF</td>
+          <td class="yes" style="text-align:center">✓</td>
+          <td>ضعيفة</td>
+          <td>مثالي نظرياً</td>
+          <td>Famine للطويلة</td>
+        </tr>
+        <tr>
+          <td>Round Robin</td>
+          <td class="yes" style="text-align:center">✓</td>
+          <td>عالية</td>
+          <td>عادل + تفاعلي</td>
+          <td>يعتمد على اختيار Q</td>
+        </tr>
+        <tr>
+          <td>Priorité</td>
+          <td style="text-align:center">الاثنان</td>
+          <td>متوسطة</td>
+          <td>مرن + قابل للتخصيص</td>
+          <td>Famine → Aging</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div id="tips" class="tips-box">
+  <h3>★ نصائح للامتحان</h3>
+  <ul>
+    <li>اطرح دائماً تاريخ الوصول من وقت الانتظار ووقت الدوران عند اختلاف أوقات الوصول.</li>
+    <li>الفرق الجوهري: <span class="fr">Programme</span> ثابت (كود)، <span class="fr">Processus</span> ديناميكي (تنفيذ + سياق).</li>
+    <li><span class="fr">Thread</span> يشارك الذاكرة — العمليات المتعددة كل منها ذاكرة مستقلة.</li>
+    <li>في امتحانات الجدولة: ارسم مخطط <span class="fr">Gantt</span> أولاً ثم احسب الأوقات.</li>
+    <li><span class="fr">Préemptif</span> = يمكن انتزاع المعالج — <span class="fr">Non-Préemptif</span> = العملية تنتهي أو تنتظر.</li>
+  </ul>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  أنظمة التشغيل — ملخص شامل &nbsp;|&nbsp; بالتوفيق في الامتحان 🎓
+</footer>
+
+</body>
+</html>
